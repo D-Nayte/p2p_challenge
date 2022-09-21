@@ -1,5 +1,9 @@
 import characters from "./data/characters.json" assert { type: "json" };
 
+window.addEventListener("load", () => {
+  printCards(characters);
+});
+
 /* ELEMENTS */
 const characterContainer = document.getElementById("character-container");
 const genderFilter = document.getElementById("gender");
@@ -111,9 +115,7 @@ const createOptionNodes = (filterOptions, appendToElement) => {
   filterOptions.forEach((option) => {
     const optionNode = document.createElement("option");
     optionNode.setAttribute("value", option);
-    const optionText = document.createTextNode(
-      option.charAt(0).toUpperCase() + option.slice(1)
-    );
+    const optionText = document.createTextNode(option.charAt(0).toUpperCase() + option.slice(1));
     optionNode.appendChild(optionText);
     appendToElement.appendChild(optionNode);
   });
@@ -185,21 +187,13 @@ const createCards = () => {
 
   let filtered = [...characters];
 
-  filtered = filtered.filter(
-    (character) => character.gender === genderFilter.value
-  );
+  filtered = filtered.filter((character) => character.gender === genderFilter.value);
 
-  filtered = filtered.filter(
-    (character) => character.status === statusFilter.value
-  );
+  filtered = filtered.filter((character) => character.status === statusFilter.value);
 
-  filtered = filtered.filter(
-    (character) => character.species === speciesFilter.value
-  );
+  filtered = filtered.filter((character) => character.species === speciesFilter.value);
 
-  filtered = filtered.filter((character) =>
-    character.name.toLowerCase().includes(search.value.toLowerCase())
-  );
+  filtered = filtered.filter((character) => character.name.toLowerCase().includes(search.value.toLowerCase()));
 
   filtered.filter((character) => {
     !chosenIds.includes(character.id);
@@ -227,9 +221,7 @@ const chooseCharacter = (e) => {
 };
 
 const removeCharacter = (e) => {
-  chosenIds = chosenIds.filter(
-    (chosenId) => chosenId !== parseInt(e.target.id)
-  );
+  chosenIds = chosenIds.filter((chosenId) => chosenId !== parseInt(e.target.id));
   createChosenCards(chosenIds);
   createCards();
 };
