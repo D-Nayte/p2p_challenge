@@ -88,17 +88,17 @@ const cleanCardContainer = () => {
 
 const getOptions = () => {
   const options = {
-    gender: [],
-    status: [],
-    species: [],
+    gender: new Set(),
+    status: new Set(),
+    species: new Set(),
   };
 
   const { gender, status, species } = options;
 
   characters.forEach((character) => {
-    gender.push(character.gender);
-    status.push(character.status);
-    species.push(character.species);
+    gender.add(character.gender);
+    status.add(character.status);
+    species.add(character.species);
   });
 
   return options;
