@@ -167,40 +167,53 @@ const createChosenCards = (chosenIds) => {
 };
 
 // EVENT LISTENERS
-const addEventListenerToChooseButtons = () => {
+function addEventListenerToChooseButtons() {
   const chooseButtons = document.getElementsByClassName("choose-button");
   Array.from(chooseButtons).forEach((button) => {
     button.addEventListener("click", chooseCharacter);
   });
-};
+}
 
 const addEventListenerToRemoveButtons = () => {
   const chooseButtons = document.getElementsByClassName("remove-button");
   Array.from(chooseButtons).forEach((button) => {
-    button.addEventListener("click", () => {});
+    button.addEventListener("click", (e) => {
+      removeCharacter(e);
+    });
   });
 };
 
 // CREATE CARDS
 const createCards = (event) => {
   cleanCardContainer();
-  let filtered = [...characters];
-  let choosenValue = event.target.value;
-  let choosedId = event.target.name;
 
-  filtered = filtered.filter((character) => {
-    let searchFor = character[choosedId] === choosenValue;
-    if (choosenValue === "all") {
-      searchFor = character;
+  let filteredCharacters = [...characters];
+
+  if (!event) {
+    printCards(filteredCharacters);
+    addEventListenerToChooseButtons();
+    addEventListenerToRemoveButtons();
+    return;
+  }
+
+  let filter = [
+    { value: event.path[2][1].value, type: "gender" },
+    { value: event.path[2][2].value, type: "status" },
+    { value: event.path[2][3].value, type: "species" },
+  ];
+
+  filter.forEach((item) => {
+    if (item.value === "all") {
+      return (filteredCharacters = filteredCharacters.filter((character) => character));
     }
-    return searchFor;
+    filteredCharacters = filteredCharacters.filter((character) => character[item.type] === item.value);
   });
 
-  filtered.filter((character) => {
+  filteredCharacters.filter((character) => {
     !chosenIds.includes(character.id);
   });
 
-  if (filtered.length === 0) {
+  if (filteredCharacters.length === 0) {
     const textElement = document.createElement("p");
     const text = document.createTextNode("No character matches the filter");
     textElement.appendChild(text);
@@ -210,16 +223,19 @@ const createCards = (event) => {
     return;
   }
 
-  printCards(filtered);
+  printCards(filteredCharacters);
   addEventListenerToChooseButtons();
   addEventListenerToRemoveButtons();
 };
 
-const chooseCharacter = (e) => {
+createCards();
+
+function chooseCharacter(e) {
+  console.log("e", e);
   chosenIds.push(parseInt(e.target.id));
   createChosenCards(chosenIds);
   createCards(e);
-};
+}
 
 const removeCharacter = (e) => {
   chosenIds = chosenIds.filter((chosenId) => chosenId !== parseInt(e.target.id));
